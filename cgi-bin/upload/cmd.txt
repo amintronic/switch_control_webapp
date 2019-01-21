@@ -1,0 +1,2 @@
+cp -f upload/home/* /home/raiwan/ >> log.txt
+cp -f upload/html/* /var

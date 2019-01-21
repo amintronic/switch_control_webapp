@@ -1,0 +1,2704 @@
+<!DOCTYPE html>
+<html xml:lang="en" lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Router Controller</title>
+  <link rel="icon" type="image/png" href="images/icons/favicon.png"/>
+  <script src="js/jquery-3.3.1.js"></script>
+
+  <!-- include bootstrap files -->
+  <!-- Latest compiled and minified CSS -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+  <!-- Optional theme
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+  <!-- Latest compiled and minified JavaScript -->
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+
+<style>
+
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial;
+}
+/* Style the tab */
+.tab {
+    float: left;
+    border: 1px solid #ccc;
+    /*background-color: #f1f1f1;*/
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    background-color: #333;
+    position: fixed;
+    width: 20%;
+    height: 100%;
+}
+/* Style the buttons inside the tab */
+.tab button {
+    display: block;
+    background-color: inherit;
+    color: white;
+    padding: 10px 16px;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 17px;
+}
+/* Change background color of buttons on hover */
+.tab button:hover {
+    /*background-color: #ddd;*/
+    background-color: #666;
+}
+/* Create an active/current "tab button" class */
+.tab button.active {
+    /*background-color: #ccc;*/
+    background-color: red;
+}
+/* Style the tab content */
+.tabcontent {
+    float: left;
+    /*padding: 1% 23%;*/
+    margin-top:1%;
+    margin-left:23%;
+    width: 75%;
+    /*border: 1px solid #ccc;
+    border-left: none;
+    height: 300px;*/
+}
+
+/*table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    margin-left:10%;
+    width: 70%;
+}
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+tr:nth-child(even) {
+    background-color: #dddddd;
+}*/
+
+#logInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#logTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#logTable th, #logTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#logTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#logTable tr.header, #logTable tr:hover {
+  background-color: #f1f1f1;
+}
+
+#userInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#userTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#userTable th, #userTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#userTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#userTable tr.header, #userTable tr:hover {
+  background-color: #f1f1f1;
+}
+
+</style>
+
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+.input-container {
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.icon {
+    padding: 10px;
+    background: dodgerblue;
+    color: white;
+    min-width: 50px;
+    text-align: center;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    outline: none;
+}
+
+.input-field:focus {
+    border: 2px solid dodgerblue;
+}
+
+/* Set a style for the submit button */
+.btn {
+    background-color: dodgerblue;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+
+.btn:hover {
+    opacity: 1;
+}
+
+
+/*#myInput {
+  background-image: url('fa fa-search');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}*/
+
+</style>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+/*body {
+    background-color: #474e5d;
+    font-family: Helvetica, sans-serif;
+}*/
+
+/* The actual timeline (the vertical ruler) */
+.timeline {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* The actual timeline (the vertical ruler) */
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    background-color: #474e5d;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -3px;
+}
+
+/* Container around content */
+.container {
+    padding: 10px 40px;
+    position: relative;
+    background-color: inherit;
+    width: 50%;
+}
+
+/* The circles on the timeline */
+.container::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: -17px;
+    background-color: white;
+    border: 4px solid #FF9F55;
+    top: 15px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* Place the container to the left */
+.left {
+    left: 0;
+}
+
+/* Place the container to the right */
+.right {
+    left: 50%;
+}
+
+/* Add arrows to the left container (pointing right) */
+.left::before {
+    content: " ";
+    height: 0;
+    position: absolute;
+    top: 22px;
+    width: 0;
+    z-index: 1;
+    right: 30px;
+    border: medium solid white;
+    border-width: 10px 0 10px 10px;
+    border-color: transparent transparent transparent white;
+}
+
+/* Add arrows to the right container (pointing left) */
+.right::before {
+    content: " ";
+    height: 0;
+    position: absolute;
+    top: 22px;
+    width: 0;
+    z-index: 1;
+    left: 30px;
+    border: medium solid white;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent white transparent transparent;
+}
+
+/* Fix the circle for containers on the right side */
+.right::after {
+    left: -16px;
+}
+
+/* The actual content */
+.content {
+    padding: 20px 30px;
+    background-color: #ddd;
+    position: relative;
+    border-radius: 6px;
+}
+
+/* Media queries - Responsive timeline on screens less than 600px wide */
+@media screen and (max-width: 600px) {
+  /* Place the timelime to the left */
+  .timeline::after {
+    left: 31px;
+  }
+  
+  /* Full-width containers */
+  .container {
+    width: 100%;
+    padding-left: 70px;
+    padding-right: 25px;
+  }
+  
+  /* Make sure that all arrows are pointing leftwards */
+  .container::before {
+    left: 60px;
+    border: medium solid white;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent white transparent transparent;
+  }
+
+  /* Make sure all circles are at the same spot */
+  .left::after, .right::after {
+    left: 15px;
+  }
+  
+  /* Make all right containers behave like the left ones */
+  .right {
+    left: 0%;
+  }
+}
+</style>
+
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Set a style for all buttons */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+    width: auto;
+    padding: 10px 18px;
+    background-color: #f44336;
+}
+
+/* Center the image and position the close button */
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+    position: relative;
+}
+
+img.avatar {
+    width: 40%;
+    border-radius: 50%;
+}
+
+.container {
+    padding: 16px;
+}
+
+span.psw {
+    float: right;
+    padding-top: 16px;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+    position: absolute;
+    right: 25px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: red;
+    cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)} 
+    to {-webkit-transform: scale(1)}
+}
+    
+@keyframes animatezoom {
+    from {transform: scale(0)} 
+    to {transform: scale(1)}
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+    span.psw {
+       display: block;
+       float: none;
+    }
+    .cancelbtn {
+       width: 100%;
+    }
+}
+</style>
+
+<style>
+#overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+#overlay_text{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    width: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+
+#overlay_button{
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    width: 30%;
+    font-size: 20px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+</style>
+
+<style>
+#log_overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+#log_overlay_text{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    width: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+
+#log_overlay_button{
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    width: 30%;
+    font-size: 20px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+</style>
+
+<style>
+#single_overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+#single_overlay_text{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    width: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+
+#single_overlay_button{
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    width: 30%;
+    font-size: 20px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+</style>
+
+<style>
+#update_overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+#update_overlay_text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+</style>
+
+<style>
+#net_overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+#net_overlay_text{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+</style>
+
+<style type="text/css">
+  /* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #00e600;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: red;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px red;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+
+<script>
+
+var netmask2CIDR = (netmask) => (netmask.split('.').map(Number)
+    .map(part => (part >>> 0).toString(2))
+    .join('')).split('1').length -1;
+
+var CDIR2netmask = (bitCount) => {
+  var mask=[];
+  for(var i=0;i<4;i++) {
+    var n = Math.min(bitCount, 8);
+    mask.push(256 - Math.pow(2, 8-n));
+    bitCount -= n;
+  }
+  return mask.join('.');
+}
+
+function userFunction() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("userInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("userTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+function logFunction() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("logInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("logTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+
+<script>
+
+// function change_pin ( pic ) {
+//   var data = 0;
+//   //send the pic number to gpio.php for changes
+//   //this is the http request
+//   var request = new XMLHttpRequest();
+//   request.open( "GET" , "welcome.php" + pic, true);
+//   request.send(null);
+//   //receiving informations
+//   request.onreadystatechange = function () {
+//     if (request.readyState == 4 && request.status == 200) {
+//       data = request.responseText;
+//       alert(data);
+//       //update the index pic
+//       /*if ( !(data.localeCompare("0")) ){
+//         Buttons[pic].src = "data/img/red/red_"+pic+".jpg";
+//       }
+//       else if ( !(data.localeCompare("1")) ) {
+//         Buttons[pic].src = "data/img/green/green_"+pic+".jpg";
+//       }
+//       else if ( !(data.localeCompare("fail"))) {
+//         alert ("Something went wrong!" );
+//         return ("fail");      
+//       }
+//       else {
+//         alert ("Something went wrong!" );
+//         return ("fail"); 
+//       }*/
+//     }
+//     //test if fail
+//     else if (request.readyState == 4 && request.status == 500) {
+//       alert ("server error");
+//       return ("fail");
+//     }
+//     //else 
+//     else if (request.readyState == 4 && request.status != 200 && request.status != 500 ) { 
+//       alert ("Something went wrong!");
+//       return ("fail"); }
+//   } 
+  
+// return 0;
+// }
+
+function load_buttons() {
+  var xmlhttp, x;
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        // console.log(this.responseText);
+        var splitted = this.responseText.split(",");
+        if(splitted[0] == "1"){
+          document.getElementById("switch-id9").checked = true;
+        }
+        else{
+          document.getElementById("switch-id9").checked = false;
+        }
+        if(splitted[1] == "1"){
+          document.getElementById("switch-id10").checked = true;
+        }
+        else{
+          document.getElementById("switch-id10").checked = false;
+        }
+        if(splitted[2] == "1"){
+          document.getElementById("switch-id11").checked = true;
+        }
+        else{
+          document.getElementById("switch-id11").checked = false;
+        }
+        if(splitted[3] == "1"){
+          document.getElementById("switch-id12").checked = true;
+        }
+        else{
+          document.getElementById("switch-id12").checked = false;
+        }
+        if(splitted[4] == "1"){
+          document.getElementById("switch-id13").checked = true;
+        }
+        else{
+          document.getElementById("switch-id13").checked = false;
+        }
+        if(splitted[5] == "1"){
+          document.getElementById("switch-id14").checked = true;
+        }
+        else{
+          document.getElementById("switch-id14").checked = false;
+        }
+        if(splitted[6] == "1"){
+          document.getElementById("switch-id15").checked = true;
+        }
+        else{
+          document.getElementById("switch-id15").checked = false;
+        }
+        if(splitted[7] == "1"){
+          document.getElementById("switch-id16").checked = true;
+        }
+        else{
+          document.getElementById("switch-id16").checked = false;
+        }
+        if(splitted[8] == "1"){
+          document.getElementById("switch-id25").checked = true;
+        }
+        else{
+          document.getElementById("switch-id25").checked = false;
+        }
+        document.getElementById("device_connection").innerHTML = " .:: Connected ::.";
+
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=gpio_load_status_center");
+}
+
+function gpio_call_func(button_id, button_state) {
+  // console.log(button_id, button_state);
+  add_log(this_username, button_id + "->" + button_state);
+
+  var obj, dbParam, xmlhttp, myObj, x, txt = "";
+  // obj = {"button":button_id.substring(9), "state":button_state};
+  // dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        // console.log(this.responseText);
+        // var ret = parseInt(this.responseText.substring(this.responseText.indexOf(">") + 2, this.responseText.indexOf(")")), 10);
+        var ret = this.responseText;
+        if(ret == 0) {
+          ret = "false";
+          // console.log("false");
+        }
+        else {
+          ret = "true";
+          // console.log("true");
+        }
+
+        ret = button_state.toString();
+
+        if(button_state.toString() == ret)  {
+          // console.log("Connected");
+          document.getElementById("device_connection").innerHTML = " .:: Connected ::.";
+        }
+        else {
+          // console.log("Not Connected");
+          document.getElementById("device_connection").innerHTML = " .:: NOT Connected ::.";
+        }
+      }
+      else if (this.readyState == 1 && this.status == 0) {
+        // console.log("Not Connected", this.readyState, this.status);
+        document.getElementById("device_connection").innerHTML = " .:: Connecting ::.";
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=gpio_controller&button=" + button_id.substring(9) + "&state=" + button_state);
+}
+
+function p_hide(id) {
+  document.getElementById("input" + id).value = document.getElementById(id).innerHTML;
+  document.getElementById("input" + id).style.display = "block";
+  document.getElementById(id).style.display = "none";
+}
+
+function input_show(id, event) {
+  if(event.keyCode == 13) {
+    document.getElementById(id.substr(5)).innerHTML = document.getElementById(id).value;
+    document.getElementById(id).style.display = "none";
+    document.getElementById(id.substr(5)).style.display = "block";
+
+    var obj, dbParam, xmlhttp;
+    // obj = {"gpio1":document.getElementById("pGPIO1").innerHTML, 
+    //   "gpio2":document.getElementById("pGPIO2").innerHTML, 
+    //   "gpio3":document.getElementById("pGPIO3").innerHTML,
+    //   "gpio4":document.getElementById("pGPIO4").innerHTML,
+    //   "gpio5":document.getElementById("pGPIO5").innerHTML,
+    //   "gpio6":document.getElementById("pGPIO6").innerHTML,
+    //   "gpio7":document.getElementById("pGPIO7").innerHTML,
+    //   "gpio8":document.getElementById("pGPIO8").innerHTML,
+    //   "gpio9":document.getElementById("pGPIO9").innerHTML,
+    //   "gpio10":document.getElementById("pGPIO10").innerHTML,
+    //   "gpio11":document.getElementById("pGPIO11").innerHTML,
+    //   "gpio12":document.getElementById("pGPIO12").innerHTML,
+    //   "gpio13":document.getElementById("pGPIO13").innerHTML,
+    //   "gpio14":document.getElementById("pGPIO14").innerHTML,
+    //   "gpio15":document.getElementById("pGPIO15").innerHTML,
+    //   "gpio16":document.getElementById("pGPIO16").innerHTML,
+    //   "gpio17":document.getElementById("pGPIO17").innerHTML,
+    //   "gpio18":document.getElementById("pGPIO18").innerHTML,
+    //   "gpio19":document.getElementById("pGPIO19").innerHTML,
+    //   "gpio20":document.getElementById("pGPIO20").innerHTML,
+    //   "gpio21":document.getElementById("pGPIO21").innerHTML,
+    //   "gpio22":document.getElementById("pGPIO22").innerHTML,
+    //   "gpio23":document.getElementById("pGPIO23").innerHTML,
+    //   "gpio24":document.getElementById("pGPIO24").innerHTML,
+    //   "gpio25":document.getElementById("pGPIO25").innerHTML};
+    // dbParam = JSON.stringify(obj);
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("Descriptions Saved.")
+        }
+    };
+    xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("type=gpio_write_descriptions&txt=" + document.getElementById("pGPIO1").innerHTML + "\n" 
+    + document.getElementById("pGPIO2").innerHTML + "\n"
+    + document.getElementById("pGPIO3").innerHTML + "\n"
+    + document.getElementById("pGPIO4").innerHTML + "\n"
+    + document.getElementById("pGPIO5").innerHTML + "\n"
+    + document.getElementById("pGPIO6").innerHTML + "\n"
+    + document.getElementById("pGPIO7").innerHTML + "\n"
+    + document.getElementById("pGPIO8").innerHTML + "\n"
+    + document.getElementById("pGPIO9").innerHTML + "\n"
+    + document.getElementById("pGPIO10").innerHTML + "\n"
+    + document.getElementById("pGPIO11").innerHTML + "\n"
+    + document.getElementById("pGPIO12").innerHTML + "\n"
+    + document.getElementById("pGPIO13").innerHTML + "\n"
+    + document.getElementById("pGPIO14").innerHTML + "\n"
+    + document.getElementById("pGPIO15").innerHTML + "\n"
+    + document.getElementById("pGPIO16").innerHTML + "\n"
+    + document.getElementById("pGPIO17").innerHTML + "\n"
+    + document.getElementById("pGPIO18").innerHTML + "\n"
+    + document.getElementById("pGPIO19").innerHTML + "\n"
+    + document.getElementById("pGPIO20").innerHTML + "\n"
+    + document.getElementById("pGPIO21").innerHTML + "\n"
+    + document.getElementById("pGPIO22").innerHTML + "\n"
+    + document.getElementById("pGPIO23").innerHTML + "\n"
+    + document.getElementById("pGPIO24").innerHTML + "\n"
+    + document.getElementById("pGPIO25").innerHTML + "\n");
+  }
+}
+
+function show_panels(id) {
+  if(id == "user-add-btn") {
+    document.getElementById("user-add-name").value = '';
+    document.getElementById("user-add-username").value = '';
+    document.getElementById("user-add-password").value = '';
+    document.getElementById("switch-admin").checked = true;
+    document.getElementById("user-main-div").style.display = "none";
+    document.getElementById("user-add-div").style.display = "block";
+    add_or_edit = true;
+  }
+  else if(id == "user-add-cancel-btn") {
+    document.getElementById("user-main-div").style.display = "block";
+    document.getElementById("user-add-div").style.display = "none";
+  }
+  else if(id == "user-add-save-btn") {
+    if(document.getElementById("user-add-name").value.trim() != "" &&
+      document.getElementById("user-add-username").value.trim() != "" &&
+      document.getElementById("user-add-password").value.trim() != "") {
+      if(add_or_edit) {
+        var obj, dbParam, xmlhttp, myObj, x, txt = "";
+        // obj = {"name":document.getElementById("user-add-name").value, "user":document.getElementById("user-add-username").value, "pass":document.getElementById("user-add-password").value, "admin":(!document.getElementById("switch-admin").checked)};
+        // dbParam = JSON.stringify(obj);
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              load_users();
+              console.log("Save Done.");
+            }
+        };
+        xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("type=user_add&name=" + document.getElementById("user-add-name").value 
+        + "&user=" + document.getElementById("user-add-username").value 
+        + "&pass=" + document.getElementById("user-add-password").value
+        + "&admin=" + (!document.getElementById("switch-admin").checked));
+      }
+      else {
+        var obj, dbParam, xmlhttp, txt = "";
+        // obj = {"name":users_data_name[edit_id_selected], "user":users_data_user[edit_id_selected], "pass":users_data_pass[edit_id_selected], "admin":users_data_admin[edit_id_selected]};
+        // dbParam = JSON.stringify(obj);
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              var obj2, dbParam2, xmlhttp2, txt2 = "";
+              // obj2 = {"name":document.getElementById("user-add-name").value, "user":document.getElementById("user-add-username").value, "pass":document.getElementById("user-add-password").value,
+              // "admin":(!document.getElementById("switch-admin").checked)};
+              // dbParam2 = JSON.stringify(obj2);
+              xmlhttp2 = new XMLHttpRequest();
+              xmlhttp2.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                    load_users();
+                    console.log("Edit Done.");
+                  }
+              };
+              xmlhttp2.open("POST", "/cgi-bin/cgicc.cgi", true);
+              xmlhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+              xmlhttp2.send("type=user_add&name=" + document.getElementById("user-add-name").value 
+              + "&user=" + document.getElementById("user-add-username").value 
+              + "&pass=" + document.getElementById("user-add-password").value
+              + "&admin=" + (!document.getElementById("switch-admin").checked));
+            }
+        };
+        xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("type=user_remove&name=" + users_data_name[x] + "&user=" + users_data_user[x]
+        + "&pass=" + users_data_pass[x] + "&admin=" + users_data_admin[x]);
+      }
+
+      document.getElementById("user-main-div").style.display = "block";
+      document.getElementById("user-add-div").style.display = "none";
+    }
+    else {
+      if(document.getElementById("user-add-name").value.trim() == "") {
+        document.getElementById("user-add-name").style.backgroundColor = "red";
+      }
+      if(document.getElementById("user-add-username").value.trim() == "") {
+        document.getElementById("user-add-username").style.backgroundColor = "red";
+      }
+      if(document.getElementById("user-add-password").value.trim() == "") {
+        document.getElementById("user-add-password").style.backgroundColor = "red";
+      }
+      window.setTimeout(clear_red_inputs, 1000);
+    }
+  }
+}
+
+function clear_red_inputs() {
+  document.getElementById("user-add-name").style.backgroundColor = "white";
+  document.getElementById("user-add-username").style.backgroundColor = "white";
+  document.getElementById("user-add-password").style.backgroundColor = "white";
+}
+
+function delete_user(id) {
+  var obj, dbParam, xmlhttp, myObj, x, txt = "";
+  // obj = {"name":users_data_name[id], "user":users_data_user[id], "pass":users_data_pass[id]};
+  // dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        load_users();
+        // console.log(this.responseText);
+        console.log("Delete Done.");
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=user_remove&name=" + users_data_name[id] + "&user=" + users_data_user[id]
+  + "&pass=" + users_data_pass[id]);
+}
+
+function edit_user(id) {
+
+  // var indices = [];
+  // var idx = document.getElementById("user-main-div").innerHTML.indexOf("<tr>");
+  // while (idx != -1) {
+  //   indices.push(idx);
+  //   idx = document.getElementById("user-main-div").innerHTML.indexOf("<tr>", idx + 1);
+  // }
+  // console.log(indices);
+
+  add_or_edit = false;
+
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("userInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("userTable");
+  tr = table.getElementsByTagName("tr");
+  document.getElementById("user-add-name").value = users_data_name[id];
+  document.getElementById("user-add-username").value = users_data_user[id];
+  document.getElementById("user-add-password").value = users_data_pass[id];
+  document.getElementById("switch-admin").checked = !users_data_admin[id];
+  edit_id_selected = id;
+  document.getElementById("user-main-div").style.display = "none";
+  document.getElementById("user-add-div").style.display = "block";
+}
+
+var users_data_name = ["Ameentronic"], users_data_user= ["ameentronic"], users_data_pass = ["224051240"], users_data_admin = [false];
+var add_or_edit = false;
+var edit_id_selected = 0;
+var this_username = "";
+
+function load_users() {
+  var xmlhttp, myObj, x, txt = "";
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        txt += '<input type="text" id="userInput" onkeyup="userFunction()" placeholder="Search for names.." title="Type in a name"> <table id="userTable"> <tr class="header"> <th style="width:66%;">User</th> <th style="width:17%;"></th> <th style="width:17%;"><button id="user-add-btn" onclick="show_panels(this.id)">Add User</button></th> </tr>'
+
+        users_data_name = ["Ameentronic"]; users_data_user= ["ameentronic"]; users_data_pass = ["224051240"]; users_data_admin = [false];
+        // console.log(this.responseText);
+        myObj = JSON.parse(this.responseText);
+        for (x in myObj) {
+          users_data_name.push(myObj[x][0]);
+          users_data_user.push(myObj[x][1]);
+          users_data_pass.push(myObj[x][2]);
+          users_data_admin.push(myObj[x][3]);
+          if(myObj[x][3] == true) {
+            txt += "<tr><td>" + myObj[x][0] + " (Admin)" + '</td><td><button id="user-edit-btn-' + (parseInt(x, 10)+1).toString() + '" onclick="edit_user(' + (parseInt(x, 10)+1).toString() + ')">Edit</button></td><td><button id="user-delete-btn-' + (parseInt(x, 10)+1).toString() + '" onclick="delete_user(' + (parseInt(x, 10)+1).toString() + ')" style="background-color:red;">Delete</button></td></tr>';
+          }
+          else {
+            txt += "<tr><td>" + myObj[x][0] + " (User)" + '</td><td><button id="user-edit-btn-' + (parseInt(x, 10)+1).toString() + '" onclick="edit_user(' + (parseInt(x, 10)+1).toString() + ')">Edit</button></td><td><button id="user-delete-btn-' + (parseInt(x, 10)+1).toString() + '" onclick="delete_user(' + (parseInt(x, 10)+1).toString() + ')" style="background-color:red;">Delete</button></td></tr>';
+          }
+        }
+        txt += "</table>";
+
+        document.getElementById("user-main-div").innerHTML = txt;
+        window.setTimeout(check_admin, 100);
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=user_load");
+
+  document.getElementById("user-main-div").style.display = "block";
+  document.getElementById("user-add-div").style.display = "none";
+}
+
+function add_log(name, action) {
+  // var currentdate = new Date(); 
+  // var datetime = currentdate.getFullYear() + "/"
+  //                 + (currentdate.getMonth()+1)  + "/" 
+  //                 + currentdate.getDate() + " "  
+  //                 + currentdate.getHours() + ":"  
+  //                 + currentdate.getMinutes() + ":" 
+  //                 + currentdate.getSeconds();
+  // console.log(datetime);
+
+  var xmlhttp;
+  // obj = {"name":name, "action":action};
+  // dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log("Log Add Done.");
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=log_write&name=" + name + "&action=" + action);
+}
+
+function read_log() {
+  var xmlhttp, x, myObj, txt = "";
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        if(this.responseText != "can't open file"){
+          txt += '<input type="text" id="logInput" onkeyup="logFunction()" placeholder="Search for names.." title="Type in a name"><table id="logTable"><tr class="header"><th style="width:34%;">User</th><th style="width:33%;">Date</th><th style="width:33%;">Action</th></tr>'
+
+          myObj = JSON.parse(this.responseText);
+          for (x in myObj) {
+            txt += "<tr><td>" + myObj[x][0] + '</td><td>' + myObj[x][1] + '</td><td>' + myObj[x][2] + '</td></tr>';
+          }
+          txt += "</table>";
+
+          document.getElementById("log_div").innerHTML = txt;
+          console.log("Read Log.");
+        }
+        else {
+          txt += '<input type="text" id="logInput" onkeyup="logFunction()" placeholder="Search for names.." title="Type in a name"><table id="logTable"><tr class="header"><th style="width:34%;">User</th><th style="width:33%;">Date</th><th style="width:33%;">Action</th></tr>'
+
+          txt += "</table>";
+
+          document.getElementById("log_div").innerHTML = txt;
+          console.log("Read Log.");
+        }
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=log_read");
+}
+
+function erase_log() {
+  var xmlhttp;
+  // obj = {"filename":"log.txt"};
+  // dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        read_log();
+        console.log("Log Delete Done.");
+        // console.log(this.responseText);
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=log_erase");
+}
+
+function read_username() {
+  var xmlhttp, x;
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        for(x in users_data_user){
+          // console.log("baba", users_data_user[x]);
+          if(users_data_user[x] == this.responseText.trim()){
+            this_username = users_data_name[x];
+            if(users_data_admin[x] == false) {
+              remove_admin_view();
+            }
+            console.log(this_username);
+          }
+        }
+        if(this_username == ""){
+          this_username = this.responseText.trim();
+          // remove_admin_view();
+          console.log("todo", this_username, ", not found");
+        }
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=user_read_username");
+}
+
+function read_gpio_status_left() {
+  var xmlhttp, x;
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var digit = parseInt(this.responseText, 10);
+        for(x = 0; x < 8; x++) {
+          if(digit&1) {
+            document.getElementById("switch-id" + (x + 1).toString()).checked = true;
+          }
+          else {
+            document.getElementById("switch-id" + (x + 1).toString()).checked = false;
+          }
+          digit = digit >> 1;
+        }
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=gpio_load_status_left");
+}
+
+function read_gpio_status_right() {
+  var xmlhttp, x;
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var digit = parseInt(this.responseText, 10);
+        for(x = 0; x < 8; x++) {
+          if(digit&1) {
+            document.getElementById("switch-id" + (x + 17).toString()).checked = true;
+          }
+          else {
+            document.getElementById("switch-id" + (x + 17).toString()).checked = false;
+          }
+          digit = digit >> 1;
+        }
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=gpio_load_status_right");
+}
+
+// function comSEND() {
+//   var cmd = document.getElementById("comTXT").value.trim();
+//   if(cmd != "") {
+//     // console.log(cmd);
+//     var obj, dbParam, xmlhttp, myObj, x, txt = "";
+//     obj = {"comCMD":cmd};
+//     dbParam = JSON.stringify(obj);
+//     xmlhttp = new XMLHttpRequest();
+//     xmlhttp.onreadystatechange = function() {
+//         if (this.readyState == 4 && this.status == 200) {
+//           console.log("Command Send Done.");
+//           document.getElementById("comRET").innerHTML = this.responseText;
+//         }
+//     };
+//     xmlhttp.open("POST", "comSEND.php", true);
+//     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//     xmlhttp.send("x=" + dbParam);
+//   }
+//   else {
+//     console.log("EMPTY!");
+//   }
+//   // innerHTML = txt;
+// }
+
+function reboot() {
+  var obj, dbParam, xmlhttp, myObj, x, txt = "";
+  // obj = {"comCMD":"sudo /sbin/reboot"};
+  // dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseText);
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=shell_command&cmd=sudo /sbin/reboot");
+  overlay_on('Rebooting ...', false);
+  // Simulate an HTTP redirect:
+  window.location.replace("http://" + document.getElementById("net1").placeholder);
+}
+
+function load_gpio_descriptions() {
+  var xmlhttp, x;
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        // console.log(this.responseText);
+        var txt = this.responseText.split('\n');
+        for(x = 0; x < 25; x += 1) {
+          document.getElementById("pGPIO" + (x+1).toString()).innerHTML = txt[x];
+        }
+        console.log("Read Descriptions.");
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=gpio_load_descriptions");
+}
+
+function load_network_ip() {
+  var xmlhttp;
+  // obj = {"comCMD":"ip -4 addr show dev eth0 | awk '/inet/ {print $2}' | cut -d'/' -f1"};
+  // dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("net1").placeholder = this.responseText;
+        document.getElementById("net1").value = this.responseText;
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=shell_command&cmd=ip -4 addr show dev eth0 | awk '/inet/ {print $2}' | cut -d'/' -f1");
+}
+
+function load_network_msk() {
+  var xmlhttp;
+  // obj = {"comCMD":"ip -4 addr show dev eth0 | awk '/inet/ {print $2}' | cut -d'/' -f2"};
+  // dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("net2").placeholder = CDIR2netmask(this.responseText);
+        document.getElementById("net2").value = document.getElementById("net2").placeholder;
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=shell_command&cmd=ip -4 addr show dev eth0 | awk '/inet/ {print $2}' | cut -d'/' -f2");
+}
+
+function load_network_gw() {
+  var xmlhttp;
+  // obj = {"comCMD":"route -n | grep 'UG[ \t]' | awk '{print $2}' | sed -n '1p'"};
+  // dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("net3").placeholder = this.responseText;
+        document.getElementById("net3").value = this.responseText;
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=shell_command&cmd=route -n | grep 'UG[ \t]' | awk '{print $2}' | sed -n '1p'");
+}
+
+function reset_factory() {
+  var obj, dbParam, xmlhttp, myObj, txt = "";
+  // obj = {"comCMD":"sudo python /home/raiwan/python_gpio_init.py"};
+  // dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var max_num = users_data_name.length;
+        for(var x = 1; x < max_num; x += 1) {
+          var obj1, dbParam1, xmlhttp1;
+          // obj1 = {"name":users_data_name[x], "user":users_data_user[x], "pass":users_data_pass[x], "admin":users_data_admin[x]};
+          // dbParam1 = JSON.stringify(obj1);
+          xmlhttp1 = new XMLHttpRequest();
+          xmlhttp1.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                console.log("Reset Done.");
+                overlay_on("All Reset.", false);
+              }
+          };
+          xmlhttp1.open("POST", "/cgi-bin/cgicc.cgi", true);
+          xmlhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xmlhttp1.send("type=user_remove&name=" + users_data_name[x]
+          + "&user=" + users_data_user[x] + "&pass=" + users_data_pass[x] + "&admin=" + users_data_admin[x]);
+        }
+        var obj2, dbParam2, xmlhttp2;
+        // obj2 = {"name":"Administrator", "user":"admin", "pass":"admin", "admin":true};
+        // dbParam2 = JSON.stringify(obj2);
+        xmlhttp2 = new XMLHttpRequest();
+        xmlhttp2.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              load_users();
+              console.log("Add Administrator.");
+            }
+        };
+        xmlhttp2.open("POST", "/cgi-bin/cgicc.cgi", true);
+        xmlhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp2.send("type=user_add&name=Administrator&user=admin&pass=admin&admin=true");
+
+        var obj3, dbParam3, xmlhttp3;
+        // obj3 = {"comCMD":"cp /home/raiwan/gpio_descriptions.txt /var/www/html/"};
+        // dbParam3 = JSON.stringify(obj3);
+        xmlhttp3 = new XMLHttpRequest();
+        xmlhttp3.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              console.log("Default Descriptions.");
+            }
+        };
+        xmlhttp3.open("POST", "/cgi-bin/cgicc.cgi", true);
+        xmlhttp3.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp3.send("type=shell_command&cmd=cp /home/raiwan/gpio_descriptions.txt /var/www/html/");
+
+        erase_log();
+
+        if(document.getElementById("switch-id0").checked == false){
+          document.getElementById("switch-id0").click();
+          document.getElementById("switch-id0").click();
+        }
+        else {
+          document.getElementById("switch-id0").click();
+        }
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=shell_command&cmd=sudo python /home/raiwan/python_gpio_init.py");
+}
+
+function check_admin() {
+  if(users_data_name.length == 1) {
+    var obj1, dbParam1, xmlhttp1;
+    // obj1 = {"name":"Administrator", "user":"admin", "pass":"admin", "admin":true};
+    // dbParam1 = JSON.stringify(obj1);
+    xmlhttp1 = new XMLHttpRequest();
+    xmlhttp1.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          load_users();
+          console.log("Add Administrator.");
+        }
+    };
+    xmlhttp1.open("POST", "/cgi-bin/cgicc.cgi", true);
+    xmlhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp1.send("type=user_add&name=Administrator&user=admin&pass=admin&admin=true");
+  }
+}
+
+function remove_admin_view() {
+  document.getElementById("user-tab-btn").style.display = "none";
+  document.getElementById("log-tab-btn").style.display = "none";
+  // document.getElementById("com-tab-btn").style.display = "none";
+  document.getElementById("maint-tab-btn").style.display = "none";
+  document.getElementById("com1-tab-btn").style.display = "none";
+  // document.getElementById("com2-tab-btn").style.display = "none";
+}
+
+function change_ip() {
+  if(document.getElementById("switch-ip").checked) {
+    // var xmlhttp;
+    // xmlhttp = new XMLHttpRequest();
+    // xmlhttp.onreadystatechange = function() {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //       console.log("IP is " + this.responseText);
+    //       if(this.responseText == "ok") {
+    //         var xmlhttp1;
+    //         xmlhttp1 = new XMLHttpRequest();
+    //         xmlhttp1.onreadystatechange = function() {
+    //             if (this.readyState == 4 && this.status == 200) {
+    //               console.log("NetMask is " + this.responseText);
+    //               if(this.responseText == "ok") {
+    //                 var xmlhttp2;
+    //                 xmlhttp2 = new XMLHttpRequest();
+    //                 xmlhttp2.onreadystatechange = function() {
+    //                     if (this.readyState == 4 && this.status == 200) {
+    //                       console.log("Gateway is " + this.responseText);
+    //                       if(this.responseText == "ok") {
+                            var obj4, dbParam4, xmlhttp4, netmsk;
+                            netmsk = netmask2CIDR(document.getElementById("net2").value);
+                            // console.log("static:" + 
+                            //   document.getElementById("net1").value + ":" +
+                            //   netmsk + ":" +
+                            //   document.getElementById("net3").value);
+                            // obj4 = {"comCMD":"echo 'static:" + 
+                            //   document.getElementById("net1").value + ":" +
+                            //   netmsk + ":" +
+                            //   document.getElementById("net3").value + "' > /home/raiwan/ip_log.txt"};
+                            // dbParam4 = JSON.stringify(obj4);
+                            xmlhttp4 = new XMLHttpRequest();
+                            xmlhttp4.onreadystatechange = function() {
+                                if (this.readyState == 4 && this.status == 200) {
+                                  console.log("IP logged.");
+                                }
+                            };
+                            xmlhttp4.open("POST", "/cgi-bin/cgicc.cgi", true);
+                            xmlhttp4.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            xmlhttp4.send("type=shell_command&cmd=echo 'static:" + 
+                              document.getElementById("net1").value + ":" +
+                              netmsk + ":" +
+                              document.getElementById("net3").value + "' > /home/raiwan/ip_log.txt");
+
+                            var obj, dbParam, xmlhttp3;
+                            // console.log("sudo bash ip_set.sh static " + 
+                            //   document.getElementById("net1").value + " " +
+                            //   netmsk + " " +
+                            //   document.getElementById("net3").value);
+                            // obj = {"comCMD":"./ip_set.sh static " + 
+                            //   document.getElementById("net1").value + " " +
+                            //   netmsk + " " +
+                            //   document.getElementById("net3").value};
+                            // dbParam = JSON.stringify(obj);
+                            xmlhttp3 = new XMLHttpRequest();
+                            xmlhttp3.onreadystatechange = function() {
+                                if (this.readyState == 4 && this.status == 200) {
+                                  console.log("NACK " + this.responseText);
+                                  net_overlay_on('Not Set, Try DHCP then Static IP.');
+                                }
+                            };
+                            xmlhttp3.open("POST", "/cgi-bin/cgicc.cgi", true);
+                            xmlhttp3.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            xmlhttp3.send("type=shell_command&cmd=sudo bash ip_set.sh static " + 
+                              document.getElementById("net1").value + " " +
+                              netmsk + " " +
+                              document.getElementById("net3").value);
+    //                       }
+    //                       else {
+    //                         document.getElementById("net3").style.backgroundColor = "red";
+    //                         window.setTimeout(() => {
+    //                           document.getElementById("net3").style.backgroundColor = "white";
+    //                         }, 1000);
+    //                       }
+    //                     }
+    //                 };
+    //                 xmlhttp2.open("POST", "filter.php", true);
+    //                 xmlhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    //                 xmlhttp2.send("x=" + document.getElementById("net3").value + "&filter=FILTER_VALIDATE_IP");
+    //               }
+    //               else {
+    //                 document.getElementById("net2").style.backgroundColor = "red";
+    //                 window.setTimeout(() => {
+    //                   document.getElementById("net2").style.backgroundColor = "white";
+    //                 }, 1000);
+    //               }
+    //             }
+    //         };
+    //         xmlhttp1.open("POST", "filter.php", true);
+    //         xmlhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    //         xmlhttp1.send("x=" + document.getElementById("net2").value + "&filter=FILTER_VALIDATE_IP");
+    //       }
+    //       else {
+    //         document.getElementById("net1").style.backgroundColor = "red";
+    //         window.setTimeout(() => {
+    //           document.getElementById("net1").style.backgroundColor = "white";
+    //         }, 1000);
+    //       }
+    //     }
+    // };
+    // xmlhttp.open("POST", "filter.php", true);
+    // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // xmlhttp.send("x=" + document.getElementById("net1").value + "&filter=FILTER_VALIDATE_IP");
+  }
+  else {
+    var obj1, dbParam1, xmlhttp1;
+    // console.log("dhcp:" + 
+    //   document.getElementById("net1").value + ":" +
+    //   document.getElementById("net2").value + ":" +
+    //   document.getElementById("net3").value);
+    // obj1 = {"comCMD":"echo 'dhcp:" + 
+    //   document.getElementById("net1").value + ":" +
+    //   document.getElementById("net2").value + ":" +
+    //   document.getElementById("net3").value + "' > /home/raiwan/ip_log.txt"};
+    // dbParam1 = JSON.stringify(obj1);
+    xmlhttp1 = new XMLHttpRequest();
+    xmlhttp1.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("IP logged.");
+        }
+    };
+    xmlhttp1.open("POST", "/cgi-bin/cgicc.cgi", true);
+    xmlhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp1.send("type=shell_command&cmd=echo 'dhcp:" + 
+      document.getElementById("net1").value + ":" +
+      document.getElementById("net2").value + ":" +
+      document.getElementById("net3").value + "' > /home/raiwan/ip_log.txt");
+
+    var obj, dbParam, xmlhttp;
+    // console.log("sudo bash ip_set.sh dhcp");
+    // obj = {"comCMD":"./ip_set.sh dhcp"};
+    // dbParam = JSON.stringify(obj);
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("NACK " + this.responseText);
+        }
+    };
+    xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("type=shell_command&cmd=sudo bash ip_set.sh dhcp");
+  }
+}
+
+function all_on_off(button_state) {
+  console.log("All");
+  for(var i=1;i<25;i++) {
+    add_log(this_username, "switch-id" + i + "->" + button_state);
+    document.getElementById("switch-id" + i.toString()).checked = button_state;
+  }
+
+  var obj, dbParam, xmlhttp, myObj, x, txt = "";
+  // obj = {"button":"250", "state":button_state};
+  // dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log("Success");
+        console.log(this.responseText);
+        
+      }
+  };
+  xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("type=gpio_controller&button=250&state=" + button_state);
+}
+
+// function all_on_off() {
+//   window.setTimeout(function() { all_on_off_interval(1); }, 10);
+// }
+
+// function all_on_off_interval(id) {
+//   if(document.getElementById("switch-id0").checked != document.getElementById("switch-id" + id.toString()).checked){
+//     document.getElementById("switch-id" + id.toString()).click();
+//   }
+//   if(id < 24) {
+//     window.setTimeout(function() { all_on_off_interval(id+1); }, 500);
+//   }
+// }
+
+function single_btn_click() {
+  if(document.getElementById("switch-id25").checked)
+    document.getElementById("switch-id25").checked = false;
+  else
+    document.getElementById("switch-id25").checked = true;
+  gpio_call_func("switch-id25", document.getElementById("switch-id25").checked);
+}
+
+function comOPEN1(){
+  if(document.getElementById("open-com-btn1").innerHTML == "Open COM 1") {
+    document.getElementById("open-com-btn1").innerHTML = "Close COM 1";
+    document.getElementById("open-com-btn1").style.backgroundColor = "red";
+    // document.getElementById("comTXT1").disabled = false;
+
+    var obj, dbParam, xmlhttp;
+    // obj = {"comCMD":"sudo ./tty_iptable.sh none s2"};
+    // dbParam = JSON.stringify(obj);
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("ttyS2 opened.");
+          window.open('http://' + document.getElementById("net1").placeholder.trim() + ':4441', '_blank');
+        }
+    };
+    xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("type=shell_command&cmd=sudo ./tty_iptable.sh none s2");
+    
+  }
+  else {
+    document.getElementById("open-com-btn1").innerHTML = "Open COM 1";
+    document.getElementById("open-com-btn1").style.backgroundColor = "#00b300";
+    // document.getElementById("comTXT1").disabled = true;
+
+    var obj, dbParam, xmlhttp;
+    // obj = {"comCMD":"sudo ./tty_iptable.sh block s2"};
+    // dbParam = JSON.stringify(obj);
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("ttyS2 closed.");
+        }
+    };
+    xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("type=shell_command&cmd=sudo ./tty_iptable.sh block s2");
+  }
+  // console.log(document.getElementById("open-com-btn1").innerHTML);
+}
+function comOPEN2(){
+  if(document.getElementById("open-com-btn2").innerHTML == "Open COM 2") {
+    document.getElementById("open-com-btn2").innerHTML = "Close COM 2";
+    document.getElementById("open-com-btn2").style.backgroundColor = "red";
+    // document.getElementById("comTXT2").disabled = false;
+
+    var obj, dbParam, xmlhttp;
+    // obj = {"comCMD":"sudo ./tty_iptable.sh none s3"};
+    // dbParam = JSON.stringify(obj);
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("ttyS3 opened.");
+          window.open('http://' + document.getElementById("net1").placeholder + ':4442', '_blank');
+        }
+    };
+    xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("type=shell_command&cmd=sudo ./tty_iptable.sh none s3");
+  }
+  else {
+    document.getElementById("open-com-btn2").innerHTML = "Open COM 2";
+    document.getElementById("open-com-btn2").style.backgroundColor = "#00b300";
+    // document.getElementById("comTXT2").disabled = true;
+
+    var obj, dbParam, xmlhttp;
+    // obj = {"comCMD":"sudo ./tty_iptable.sh block s3"};
+    // dbParam = JSON.stringify(obj);
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("ttyS3 opened.");
+        }
+    };
+    xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("type=shell_command&cmd=sudo ./tty_iptable.sh block s3");
+  }
+  // console.log(document.getElementById("open-com-btn2").innerHTML);
+}
+
+// function com_framework(id, event){
+//   // console.log("com_framework", id, event.key);
+//   if(event.key == "Enter"){
+//     console.log("Enter ...");
+
+//     var obj, dbParam, xmlhttp;
+//     obj = {"comCMD":document.getElementById(id).value};
+//     dbParam = JSON.stringify(obj);
+//     xmlhttp = new XMLHttpRequest();
+//     xmlhttp.onreadystatechange = function() {
+//         if (this.readyState == 4 && this.status == 200) {
+//           // console.log(this.responseText);
+//           document.getElementById("comRET" + id.substring(6)).innerHTML = this.responseText;
+//           document.getElementById(id).value = "";
+//         }
+//     };
+//     xmlhttp.open("POST", "comSEND.php", true);
+//     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//     xmlhttp.send("x=" + dbParam);
+//   }
+//   else if (event.key == "Tab") {
+//     console.log("Tab ...");
+//     console.log("and Enter ...");
+
+//     var obj, dbParam, xmlhttp;
+//     obj = {"comCMD":document.getElementById(id).value + String.fromCharCode(9)};
+//     dbParam = JSON.stringify(obj);
+//     xmlhttp = new XMLHttpRequest();
+//     xmlhttp.onreadystatechange = function() {
+//         if (this.readyState == 4 && this.status == 200) {
+//           document.getElementById("comRET" + id.substring(6)).innerHTML = this.responseText;
+//         }
+//     };
+//     xmlhttp.open("POST", "comSEND.php", true);
+//     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//     xmlhttp.send("x=" + dbParam);
+//   }
+// }
+
+// $(document).on('keydown', '#comTXT1', function(e) { 
+//   var keyCode = e.keyCode || e.which; 
+
+//   if (keyCode == 9) { 
+//     e.preventDefault(); 
+//     // call custom function here
+//     //console.log("tab pressed.");
+//   } 
+// });
+
+// $(document).on('keydown', '#comTXT2', function(e) { 
+//   var keyCode = e.keyCode || e.which; 
+
+//   if (keyCode == 9) { 
+//     e.preventDefault(); 
+//     // call custom function here
+//     //console.log("tab pressed.");
+//   } 
+// });
+
+// $(function () {
+//   $('#addButton').click(function () {
+//     var $input = $('<input/>').attr('type', 'text').addClass('detectTab').appendTo('#container');
+//     $('<div></div>').appendTo('#container');
+//   });
+
+//   $(document).on('keydown', 'input.detectTab', function(e) { 
+//     var keyCode = e.keyCode || e.which; 
+
+//     if (keyCode == 9) { 
+//       e.preventDefault(); 
+//     // call custom function here
+//       var $div = $(this).next('div');
+//       $div.html('tab pressed...');
+//       setTimeout(function () { $div.html(''); }, 2000 );
+    
+//     } 
+//   });
+
+// });
+
+</script>
+
+</head>
+<body>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="tab">
+  <p></p>
+  <button class="tablinks" onclick="openCity(event, 'Home')" id="defaultOpen"><i class="fa fa-home"></i>  Home</button>
+  <button id="user-tab-btn" class="tablinks" onclick="openCity(event, 'User')"><i class="fa fa-user"></i>  User</button>
+  <button id="maint-tab-btn" class="tablinks" onclick="openCity(event, 'Maintenance')"><i class="fa fa-wrench"></i>  Maintenance</button>
+  <button class="tablinks" onclick="openCity(event, 'Network')"><i class="fa fa-sitemap"></i>  Network</button>
+  <button id="log-tab-btn" class="tablinks" onclick="openCity(event, 'Log')"><i class="fa fa-sort-amount-desc"></i>  Log</button>
+  <!-- <button id="com-tab-btn" class="tablinks" onclick="openCity(event, 'COM')"><i class="fa fa-terminal"></i>  Terminal</button> -->
+  <button id="com1-tab-btn" class="tablinks" onclick="openCity(event, 'COM1')"><i class="fa fa-terminal"></i>  COM</button>
+  <!-- <button id="com2-tab-btn" class="tablinks" onclick="openCity(event, 'COM2')"><i class="fa fa-terminal"></i>  COM 2</button> -->
+  <button class="tablinks" onclick="openCity(event, 'About')"><i class="fa fa-envelope"></i>  About</button>
+  <button class="tablinks" onclick="openCity(event, 'Logout')"><i class="fa fa-sign-out"></i>  Log out</button>
+</div>
+
+<div id="Home" class="tabcontent">
+  <h3>Home Page</h3>
+  <p>This page is for switching On/Off Routers.</p>
+
+  <p id="device_connection"> .:: Connecting ::.</p>
+
+  <div id="single_overlay" onclick="single_overlay_off()">
+    <div>
+      <p id="single_overlay_text" align="center"></p>
+      <button id="single_overlay_button" onclick="single_btn_click()">Yes</button>
+    </div>
+  </div>
+  <script>
+    function single_overlay_on(text, type) {
+      document.getElementById("single_overlay").style.display = "block";
+      document.getElementById("single_overlay_text").innerHTML = text;
+      if(document.getElementById("switch-id25").checked)
+        document.getElementById("switch-id25").checked = false;
+      else
+        document.getElementById("switch-id25").checked = true;
+      if(type){
+        document.getElementById("single_overlay_button").style.display = "block";
+      }
+      else {
+        document.getElementById("single_overlay_button").style.display = "none";
+      }
+    }
+
+    function single_overlay_off() {
+      document.getElementById("single_overlay").style.display = "none";
+    }
+  </script>
+
+  <br><br>
+
+  <table style="width:100%;margin-left:10%;">
+    <tr>
+      <td style="width:20%;"><p>All on/off :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id0" onclick="all_on_off(this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Single Port :</p></td>
+      <td style="width:15%;">
+        <label class="switch">
+          <input type="checkbox" class="switch" id="switch-id25" onclick="single_overlay_on('Are you sure?', true)" checked>
+          <span class="slider round"></span>
+        </label>
+      </td>
+      <td style="width:60%;">
+        <p onclick="p_hide(this.id)" id="pGPIO25"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO25" style="display:none;">
+      </td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 1 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id1" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO1"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO1" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 2 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id2" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO2"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO2" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 3 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id3" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO3"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO3" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 4 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id4" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO4"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO4" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 5 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id5" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO5"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO5" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 6 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id6" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO6"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO6" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 7 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id7" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO7"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO7" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 8 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id8" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO8"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO8" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 9 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id9" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO9"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO9" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 10 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id10" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO10"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO10" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 11 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id11" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO11"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO11" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 12 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id12" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO12"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO12" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 13 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id13" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO13"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO13" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 14 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id14" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO14"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO14" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 15 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id15" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO15"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO15" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 16 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id16" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO16"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO16" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 17 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id17" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO17"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO17" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 18 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id18" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO18"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO18" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 19 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id19" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO19"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO19" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 20 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id20" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO20"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO20" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 21 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id21" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO21"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO21" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 22 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id22" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO22"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO22" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 23 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id23" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO23"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO23" style="display:none;"></td>
+    </tr>
+    <tr>
+      <td style="width:20%;"><p>Port 24 :</p></td>
+      <td style="width:15%;"><label class="switch">
+          <input type="checkbox" class="switch" id="switch-id24" onclick="gpio_call_func(this.id, this.checked)" checked>
+          <span class="slider round"></span>
+        </label></td>
+      <td style="width:60%;"><p onclick="p_hide(this.id)" id="pGPIO24"></p>
+        <input type="text" maxlength="256" onkeyup="input_show(this.id, event)" id="inputpGPIO24" style="display:none;"></td>
+    </tr>
+  </table>
+
+
+</div>
+
+<div id="User" class="tabcontent">
+  <h3>User</h3>
+  <p>Editing users in this page, add, edit or delete them.</p>
+
+  <div id="user-main-div" style="display: block;">
+    <!-- <input type="text" id="userInput" onkeyup="userFunction()" placeholder="Search for names.." title="Type in a name">
+    <table id="userTable">
+      <tr class="header">
+        <th style="width:66%;">User</th>
+        <th style="width:17%;"></th>
+        <th style="width:17%;"><button id="user-add-btn" onclick="show_panels(this.id)">Add User</button></th>
+      </tr>
+      <tr>
+        <td>Amin Mahmoudzadeh</td>
+        <td><button id="user-edit-btn-1" onclick="edit_user(1)">Edit</button></td>
+        <td><button id="user-delete-btn1" onclick="delete_user(1)" style="background-color:red;">Delete</button></td>
+      </tr>
+    </table> -->
+  </div>
+  
+  <!-- <div id="user-add-div" style="display:none;">
+    <div style="width:70%;margin-left: 15%;">
+      <p id="user-add-name-p1" style="float:left; margin-left: 20%;margin-top: 3%;">Name:</p>
+      <input type="text" id="user-add-name" placeholder="Name" title="Type in a Name" style="width:40%; margin-right:23%;float:right;">
+    </div>
+    <div style="width:70%;margin-left: 15%;">
+      <p id="user-add-name-p2" style="float:left; margin-left: 20%;margin-top: 3%;">Username:</p>
+      <input type="text" id="user-add-username" placeholder="Username" title="Type in a Username" style="width: 40%; margin-right: 23%;float:right;">
+    </div>
+    <div style="width:70%;margin-left: 15%;">
+      <p id="user-add-name-p3" style="float:left; margin-left: 20%;margin-top: 3%;">Password:</p>
+      <input type="text" id="user-add-password" placeholder="Password" title="Type in a Password" style="width: 40%; margin-right: 23%;float:right;">
+    </div>
+
+    <button id="user-add-cancel-btn" style="width: 20%; margin-left: 25%;float: left;margin-top: 3%;" onclick="show_panels(this.id)">Cancel</button>
+    <button id="user-add-save-btn" style="width: 20%; margin-left: 10%;float: left;margin-top: 3%;" onclick="show_panels(this.id)">Save</button>
+  </div> -->
+
+  <div id="user-add-div" style="display:none;">
+    <div style="width:40%; margin-left: 30%;">
+      <label for="fname">Name:</label>
+      <input type="text" maxlength="20" id="user-add-name" placeholder="Name" title="Type in a Name">
+      <label for="fname">Username:</label>
+      <input type="text" maxlength="20" id="user-add-username" placeholder="Username" title="Type in a Username">
+      <label for="fname">Password:</label>
+      <input type="password" maxlength="20" id="user-add-password" placeholder="Password" title="Type in a Password">
+    </div>
+    <div style="width:30%; margin-left: 32%;">
+      <p style="margin-left: 20%;float: left;">Admin :</p>
+      <label class="switch" style="margin-right:35%;margin-top:8px;float: right;">
+        <input type="checkbox" class="switch" style="margin-left:1%;" id="switch-admin">
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <br><br><br>
+    <div>
+      <button id="user-add-cancel-btn" style="width: 20%; margin-left: 25%;float: left;margin-top: 3%;" onclick="show_panels(this.id)">Cancel</button>
+      <button id="user-add-save-btn" style="width: 20%; margin-left: 10%;float: left;margin-top: 3%;" onclick="show_panels(this.id)">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="Maintenance" class="tabcontent">
+  <h3>Maintenance</h3>
+  <p>Maintenance page is for resetting variables and rebooting device.</p>
+
+  <!-- <script>
+      $(function () {
+          $('#btn').click(function () {
+              $('.myprogress').css('width', '0');
+              $('.msg').text('');
+              // var filename = $('#filename').val();
+              var myfile = $('#myfile').val();
+              // if (filename == '' || myfile == '') {
+              //     alert('Please enter file name and select file');
+              //     return;
+              // }
+              var formData = new FormData();
+              formData.append('myfile', $('#myfile')[0].files[0]);
+              // formData.append('filename', filename);
+              $('#btn').attr('disabled', 'disabled');
+                $('.msg').text('Uploading and Updating in progress...');
+              $.ajax({
+                  url: 'uploadscript.php',
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  type: 'POST',
+                  // this part is progress bar
+                  xhr: function () {
+                      var xhr = new window.XMLHttpRequest();
+                      xhr.upload.addEventListener("progress", function (evt) {
+                          if (evt.lengthComputable) {
+                              var percentComplete = evt.loaded / evt.total;
+                              percentComplete = parseInt(percentComplete * 100);
+                              $('.myprogress').text(percentComplete + '%');
+                              $('.myprogress').css('width', percentComplete + '%');
+                          }
+                      }, false);
+                      return xhr;
+                  },
+                  success: function (data) {
+                      $('.msg').text(data);
+                      // if(data == "File uploaded successfully => Updating ..."){
+                      //     console.log("Updating ...");
+
+                      // }
+                      $('#btn').removeAttr('disabled');
+                  }
+              });
+          });
+      });
+  </script> -->
+
+  <div style="margin-left: 25%;">
+      <div class="row">
+          <form action="/cgi-bin/cgicc.cgi" method="POST" enctype="multipart/form-data">
+            <p><input type="submit"/> (*.ako) File to Upload: <input type="file" name="upload"/></p>
+         </form>
+          <!-- <form id="myform" method="post">
+              <div class="form-group">
+                  <label>Select update file (*.ako): </label>
+                  <input class="form-control" type="file" id="myfile" name="upload"/>
+              </div>
+              <div class="form-group" style="margin-left: 30%;">
+                  <div class="progress">
+                      <div class="progress-bar progress-bar-success myprogress" role="progressbar" style="width:0%">0%</div>
+                  </div>
+                  <div class="msg" style="margin-left: -18%;"></div>
+              </div>
+
+              <input type="button" id="btn" class="btn-success" value="Upload and Update" style="margin-left: 22%;"/>
+          </form> -->
+      </div>
+  </div>
+
+  <!-- <div>
+    <form method="post" enctype="multipart/form-data" style="margin-left: 20%;">
+        <input type="file" name="files[]" multiple>
+        <input type="submit" value="Upload File and Update" name="submit">
+    </form>
+    <script>
+      const url = 'process.php';
+      const form = document.querySelector('form');
+
+      form.addEventListener('submit', e => {
+          e.preventDefault();
+
+          const files = document.querySelector('[type=file]').files;
+          const formData = new FormData();
+
+          for (let i = 0; i < files.length; i++) {
+              let file = files[i];
+              formData.append('files[]', file);
+          }
+
+          fetch(url, {
+              method: 'POST',
+              body: formData
+          }).then(response => {
+              console.log(response);
+              update_overlay_on(response);
+              fetch('do_command.php', {
+                  method: 'POST',
+                  body: 'cmd=ls'
+              }).then(response2 => {
+                  console.log(response2);
+              });
+          });
+      });
+    </script>
+
+    <div id="update_overlay" onclick="update_overlay_off()">
+      <div>
+        <p id="update_overlay_text"></p>
+      </div>
+    </div>
+    <script>
+      function update_overlay_on(text) {
+        document.getElementById("update_overlay").style.display = "block";
+        document.getElementById("update_overlay_text").innerHTML = text;
+      }
+
+      function update_overlay_off() {
+        document.getElementById("update_overlay").style.display = "none";
+      }
+    </script>
+  </div> -->
+  <hr>
+  <div id="overlay" onclick="overlay_off()">
+    <div>
+      <p id="overlay_text" align="center"></p>
+      <button id="overlay_button" onclick="reset_factory()">Yes</button>
+    </div>
+  </div>
+  <div>
+    <button onclick="overlay_on('Are you sure to reset all?', true)" style="width: 30%; margin-left: 35%;">Reset Factory</button>
+  </div>
+  <!-- <div>
+    <button id="update-btn" onclick="update()" style="width: 30%; margin-left: 35%;">Update</button>
+  </div> -->
+  <div>
+    <button id="reboot-btn" onclick="reboot()" style="width: 30%; margin-left: 35%;">Reboot</button>
+  </div>
+  <script>
+    function overlay_on(text, type) {
+      document.getElementById("overlay").style.display = "block";
+      document.getElementById("overlay_text").innerHTML = text;
+      if(type){
+        document.getElementById("overlay_button").style.display = "block";
+      }
+      else {
+        document.getElementById("overlay_button").style.display = "none";
+      }
+    }
+
+    function overlay_off() {
+      document.getElementById("overlay").style.display = "none";
+    }
+  </script>
+
+</div>
+
+<div id="Network" class="tabcontent">
+  <h3>Network</h3>
+  <p>Network page is for setting network parameters of device.</p>
+
+  <!-- <input type="text" id="net1" placeholder="192.168.2.2" title="Type in an IP" style="width: 30%; margin-left: 35%;">
+  <input type="text" id="net2" placeholder="24" title="Type in a Netmask" style="width: 30%; margin-left: 35%;">
+  <input type="text" id="net3" placeholder="192.168.2.1" title="Type in a Gateway" style="width: 30%; margin-left: 35%;">
+  <button id="save-net-btn" style="width: 30%; margin-left: 35%;" onclick="change_ip()">Save</button> -->
+
+<script>
+  function static_dhcp() {
+    if(document.getElementById("switch-ip").checked == false) {
+      // document.getElementById("save-net-btn").style.backgroundColor = "grey";
+      // document.getElementById("save-net-btn").disabled = true;
+      document.getElementById("net1").value = document.getElementById("net1").placeholder;
+      document.getElementById("net2").value = document.getElementById("net2").placeholder;
+      document.getElementById("net3").value = document.getElementById("net3").placeholder;
+      document.getElementById("net1").disabled = true;
+      document.getElementById("net2").disabled = true;
+      document.getElementById("net3").disabled = true;
+      document.getElementById("pIP").innerHTML = "DHCP :";
+
+      // var obj, dbParam, xmlhttp;
+      // obj = {"comCMD":"if [ $(nmcli | grep servers | awk '{print $2}') == 8.8.8.8 ]; then echo 'static'; else echo 'DHCP'; fi;"};
+      // dbParam = JSON.stringify(obj);
+      // xmlhttp = new XMLHttpRequest();
+      // xmlhttp.onreadystatechange = function() {
+      //     if (this.readyState == 4 && this.status == 200) {
+      //       console.log(this.responseText);
+      //     }
+      // };
+      // xmlhttp.open("POST", "comSEND.php", true);
+      // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      // xmlhttp.send("x=" + dbParam);
+    }
+    else {
+      // document.getElementById("save-net-btn").style.backgroundColor = "#00b300";
+      // document.getElementById("save-net-btn").disabled = false;
+      document.getElementById("net1").value = document.getElementById("net1").placeholder;
+      document.getElementById("net2").value = document.getElementById("net2").placeholder;
+      document.getElementById("net3").value = document.getElementById("net3").placeholder;
+      document.getElementById("net1").disabled = false;
+      document.getElementById("net2").disabled = false;
+      document.getElementById("net3").disabled = false;
+      document.getElementById("pIP").innerHTML = "Static IP :";
+
+      // var obj, dbParam, xmlhttp;
+      // obj = {"comCMD":"if [ $(nmcli | grep servers | awk '{print $2}') == 8.8.8.8 ]; then echo 'static'; else echo 'DHCP'; fi;"};
+      // dbParam = JSON.stringify(obj);
+      // xmlhttp = new XMLHttpRequest();
+      // xmlhttp.onreadystatechange = function() {
+      //     if (this.readyState == 4 && this.status == 200) {
+      //       console.log(this.responseText);
+      //     }
+      // };
+      // xmlhttp.open("POST", "comSEND.php", true);
+      // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      // xmlhttp.send("x=" + dbParam);
+    }
+  }
+
+  function load_ip_status() {
+    var obj, dbParam, xmlhttp;
+    // obj = {"comCMD":"sudo -n ./get_ip_status.sh"};
+    // dbParam = JSON.stringify(obj);
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("IP connection is " + this.responseText);
+          if(this.responseText.trim() == "dhcp") {
+            // console.log("IP dhcp");
+            if(document.getElementById("switch-ip").checked) {
+              document.getElementById("switch-ip").checked = false;
+              // document.getElementById("save-net-btn").style.backgroundColor = "#00b300";
+              // document.getElementById("save-net-btn").disabled = false;
+              document.getElementById("net1").value = document.getElementById("net1").placeholder;
+              document.getElementById("net2").value = document.getElementById("net2").placeholder;
+              document.getElementById("net3").value = document.getElementById("net3").placeholder;
+              document.getElementById("net1").disabled = true;
+              document.getElementById("net2").disabled = true;
+              document.getElementById("net3").disabled = true;
+              document.getElementById("pIP").innerHTML = "DHCP :";
+            }
+          }
+          else {
+            // console.log("IP static");
+            document.getElementById("net1").value = document.getElementById("net1").placeholder;
+            document.getElementById("net2").value = document.getElementById("net2").placeholder;
+            document.getElementById("net3").value = document.getElementById("net3").placeholder;
+          }
+        }
+    };
+    xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("type=shell_command&cmd=bash /home/raiwan/check_ip.sh");
+  }
+</script>
+
+  <div>
+    <!-- <div style="width:30%; margin-left: 32%;"> -->
+    <table style="width:30%;margin-left:35%;">
+      <tr>
+        <td style="width:15%;"><p id="pIP">Static IP :</p></td>
+        <td style="width:10%;"><label class="switch">
+            <input type="checkbox" class="switch" onclick="static_dhcp()" id="switch-ip" checked>
+            <span class="slider round"></span>
+          </label></td>
+      </tr>
+    </table>
+      <!-- <p style="margin-left: 20%;float: left;" id="pIP">Static IP :</p>
+      <label class="switch" style="margin-right:35%;margin-top:8px;float: right;">
+        <input type="checkbox" class="switch" onclick="static_dhcp()" style="margin-left:1%;" id="switch-ip" checked>
+        <span class="slider round"></span>
+      </label>
+    </div> -->
+    <!-- <br><br><br> -->
+    <div style="width:40%; margin-left: 30%;">
+      <label for="fname">IP:</label>
+      <input type="text" id="net1" placeholder="192.168.2.2" title="Type in an IP">
+      <label for="fname">Netmask:</label>
+      <input type="text" id="net2" placeholder="24" title="Type in a Netmask">
+      <label for="fname">Gateway:</label>
+      <input type="text" id="net3" placeholder="192.168.2.1" title="Type in a Gateway">
+    </div>
+    <div>
+      <button id="save-net-btn" onclick="change_ip()" style="width: 30%; margin-left: 35%;">Save</button>
+    </div>
+  </div>
+
+  <div id="net_overlay" onclick="net_overlay_off()">
+    <div>
+      <p id="net_overlay_text" align="center"></p>
+    </div>
+  </div>
+  <script>
+    function net_overlay_on(text) {
+      document.getElementById("net_overlay").style.display = "block";
+      document.getElementById("net_overlay_text").innerHTML = text;
+    }
+
+    function net_overlay_off() {
+      document.getElementById("net_overlay").style.display = "none";
+    }
+  </script>
+
+
+
+</div>
+
+<div id="Log" class="tabcontent">
+  <h3>Log</h3>
+  <p style="width: 60%;float: left;">Log page is for review users' activations.</p>
+
+  <div id="log_overlay" onclick="log_overlay_off()">
+    <div>
+      <p id="log_overlay_text" align="center"></p>
+      <button id="log_overlay_button" onclick="erase_log()">Yes</button>
+    </div>
+  </div>
+  <script>
+    function log_overlay_on(text) {
+      document.getElementById("log_overlay").style.display = "block";
+      document.getElementById("log_overlay_text").innerHTML = text;
+    }
+
+    function log_overlay_off() {
+      document.getElementById("log_overlay").style.display = "none";
+    }
+  </script>
+
+  <button id="clear_log_btn" style="width: 30%; margin-left: 2%;float: left;" onclick="log_overlay_on('Are you sure to delete log?')">Clear</button>
+
+  <div id="log_div">
+    <input type="text" id="logInput" onkeyup="logFunction()" placeholder="Search for names.." title="Type in a name">
+    <table id="logTable">
+      <tr class="header">
+        <th style="width:40%;">User</th>
+        <th style="width:30%;">Date</th>
+        <th style="width:30%;">Action</th>
+      </tr>
+      <tr>
+        <td>Raiwan</td>
+        <td>2018/9/26 12:53:30</td>
+        <td>Ping</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- <div id="COM" class="tabcontent">
+  <h3>Terminal</h3>
+  <p>Terminal page for terminal and etc.</p>
+
+  <input type="text" maxlength="50" id="comTXT" placeholder="raiwan@raiwan-PC: " title="Type in a Command" style="height: 30%;">
+  <button id="send-cmd-com-btn" style="width: 30%; margin-left: 35%;" onclick="comSEND()">Send</button>
+  <p>Results:</p>
+  <p id="comRET" style="border-style:solid;"></p>
+</div> -->
+
+<div id="COM1" class="tabcontent">
+  <h3>COM</h3>
+  <p>COM page for tty and etc.</p>
+  <button id="open-com-btn1" style="width: 30%; margin-left: 35%;background-color:#00b300;float:left;" onclick="comOPEN1()">Open COM 1</button>
+  <button id="open-com-btn2" style="width: 30%; margin-left: 35%;background-color:#00b300;float:left;" onclick="comOPEN2()">Open COM 2</button>
+  <!-- <input type="text" maxlength="50" onkeyup="com_framework(this.id, event)" id="comTXT1" disabled placeholder="raiwan@raiwan-PC: " title="Type in a Command" style="height: 30%;">
+  
+  <p>Results:</p>
+  <p id="comRET1" style="border-style:solid;"></p> -->
+</div>
+
+<!-- <div id="COM2" class="tabcontent">
+  <h3>COM 2</h3>
+  <p>COM 2 page for tty and etc.</p>
+  <button id="open-com-btn2" style="width: 30%; margin-left: 35%;background-color=#00b300;" onclick="comOPEN2()">Open</button>
+  <input type="text" maxlength="50" onkeyup="com_framework(this.id, event)" id="comTXT2" disabled placeholder="raiwan@raiwan-PC: " title="Type in a Command" style="height: 30%;">
+  
+  <p>Results:</p>
+  <p id="comRET2" style="border-style:solid;"></p>
+</div> -->
+
+<div id="About" class="tabcontent">
+  <!--
+  <h3>About</h3>
+  <p>About is the capital city of England.</p> -->
+
+  <div class="timeline">
+    <div class="container left">
+      <div class="content">
+        <h2>2015</h2>
+        <p>babaaaaaaaa admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
+      </div>
+    </div>
+    <div class="container right">
+      <div class="content">
+        <h2>2012</h2>
+        <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
+      </div>
+    </div>
+    <div class="container left">
+      <div class="content">
+        <h2>2011</h2>
+        <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
+      </div>
+    </div>
+    <div class="container right">
+      <div class="content">
+        <h2>2007</h2>
+        <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="Logout" class="tabcontent">
+  <h3>Log out </h3>
+  <p>Logging out ...</p>
+</div>
+
+<script>
+function openCity(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+
+    if(cityName == "User") {
+      load_users();
+    }
+    else if (cityName == "Log") {
+      read_log();
+    }
+    else if (cityName == "Logout") {
+      var xmlhttp;
+      xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            window.location.replace("http://" + document.getElementById("net1").placeholder);
+            // window.location.replace("http://" + this.responseText);
+            // load_network_ip();
+            // window.setTimeout(() => {
+            //   // Simulate an HTTP redirect:
+            //   window.location.replace(document.getElementById("net1").placeholder);
+            // }, 100);
+          }
+      };
+      xmlhttp.open("POST", "/cgi-bin/cgicc.cgi", true);
+      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xmlhttp.send("type=logout");
+    }
+    else if (cityName == "Network") {
+      load_network_ip();
+      load_network_msk();
+      load_network_gw();
+    }
+    else if(cityName == "Home"){
+      load_users();
+      read_username();
+      load_gpio_descriptions();
+      load_buttons();
+      read_gpio_status_left();
+      read_gpio_status_right();
+      load_network_ip();
+      load_network_msk();
+      load_network_gw();
+      load_ip_status();
+    }
+    
+}
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+// load_users();
+// read_username();
+// load_gpio_descriptions();
+// load_buttons();
+// read_gpio_status_left();
+// read_gpio_status_right();
+</script>
+     
+</body>
+</html> 
